@@ -2,6 +2,7 @@
     LESSON 1 - DISPLAY
     LESSON 3 - RENDERING 
         *index buffer - jest po to, żeby powiedzieć openGLowi w jaki sposób ma połączyć wierzchołki
+        może jakies zmianki???
 */
 
 package engineTester;
