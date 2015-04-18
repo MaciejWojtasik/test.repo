@@ -56,7 +56,7 @@ public class MainGameLoop {
             shader.stop();
             DisplayManager.updateDisplay();          
         }
-        
+        System.out.println("GIT TEST");
         shader.cleanUp();
         loader.cleanUp();
         DisplayManager.closeDisplay();
