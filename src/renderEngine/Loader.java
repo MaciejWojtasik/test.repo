@@ -1,23 +1,33 @@
 /*
     LESSON 2 - VAO & VBO
     wczytujemy modele 3d do pamięci
+    
+    LESSON 6 - TEXTURES - dodajemy funkcje wczytania tekstury, liste i czyszczenie do cleanup
 */
 package renderEngine;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureLoader;
 
 public class Loader {
     
     private List<Integer> vaos = new ArrayList<Integer>();
     private List<Integer> vbos = new ArrayList<Integer>();
+    private List<Integer> textures = new ArrayList<Integer>(); // po zamknieciu programu bedziemy usuwać z pamięci 
     
     public rawModel loadToVAO(float[] positions, int[] indices){
         int vaoID = createVAO();
@@ -27,13 +37,30 @@ public class Loader {
         return new rawModel(vaoID, indices.length); // dzielimy przez 3 bo są w 3d (x,y,z), a                                                    
     }                                                 //potrzebujemy ilosc wierzchołków
     
+    
+    public int loadTexture(String fileName){
+        Texture texture = null; //newdawn.slick ...
+        try {
+            texture = TextureLoader.getTexture("PNG", new FileInputStream("res/" + fileName + ".png")); //wczytujemy teksture
+        } catch (FileNotFoundException e) {     //szity potrzebne do wczytania
+            e.printStackTrace();                //szity potrzebne do wczytania
+        } catch (IOException e) {               //szity potrzebne do wczytania
+            e.printStackTrace();
+        }
+        int textureID = texture.getTextureID();
+        textures.add(textureID); // dodajemy teksture do listy tekstur
+        return textureID;
+    }
     //czyscimy nasze listy
     public void cleanUp(){
         for(int vao:vaos)
             GL30.glDeleteVertexArrays(vao);
-            
+          
         for(int vbo:vbos)
-            GL15.glDeleteBuffers(vbo);      
+            GL15.glDeleteBuffers(vbo);     
+        
+        for(int texture:textures)
+            GL11.glDeleteTextures(texture);
     }
     
     
